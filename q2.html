@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>TA Assistance Tracker</title>
+  <script type="text/javascript">
+    function addEntry() {
+      var entryField = document.getElementById("entryField");
+      var entry = entryField.value.trim();
+      
+      if (entry === "") {
+        alert("Invalid entry");
+        return;
+      }
+      
+      var entriesList = document.getElementById("entriesList");
+      var entryParts = entry.split(" ");
+      
+      if (entryParts.length !== 3) {
+        alert("Invalid entry");
+        return;
+      }
+      
+      var directoryId = entryParts[0];
+      var description = entryParts[1];
+      var duration = entryParts[2];
+      
+      var entryItem = document.createElement("li");
+      entryItem.textContent = directoryId + " " + description + " " + duration;
+      
+      entriesList.appendChild(entryItem);
+      
+      entryField.value = "";
+    }
+    
+    function summary() {
+      var entriesList = document.getElementById("entriesList");
+      var entries = entriesList.getElementsByTagName("li");
+      var summaryList = document.getElementById("summaryList");
+      
+      summaryList.innerHTML = "";
+      
+      var entryArray = Array.from(entries);
+      var sortedEntries = entryArray.sort(function(a, b) {
+        var aDuration = parseInt(a.textContent.split(" ")[2]);
+        var bDuration = parseInt(b.textContent.split(" ")[2]);
+        return bDuration - aDuration;
+      });
+      
+      var totalEntries = sortedEntries.length;
+      
+      var countItem = document.createElement("li");
+      countItem.textContent = "Total entries: " + totalEntries;
+      summaryList.appendChild(countItem);
+      
+      sortedEntries.forEach(function(entry) {
+        var entryItem = document.createElement("li");
+        entryItem.textContent = entry.textContent.replace(/\s/g, '');
+        summaryList.appendChild(entryItem);
+      });
+    }
+  </script>
+</head>
+<body>
+  <h1>TA Assistance Tracker</h1>
+  
+  <form>
+    <label for="entryField">Enter an entry :</label>
+    <input type="text" id="entryField">
+    <button type="button" onclick="addEntry()">Add Entry</button>
+    <button type="button" onclick="summary()">Summary</button>
+  </form>
+  
+  <h2>Entries</h2>
+  <ul id="entriesList"></ul>
+  
+  <h2>Summary</h2>
+  <ul id="summaryList"></ul>
+</body>
+</html>
